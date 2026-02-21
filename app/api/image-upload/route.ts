@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from 'cloudinary';
 import {auth} from '@clerk/nextjs/server';
-import next from "next";
+
 
  // Configuration
     cloudinary.config({ 
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
         if(!file) {
             return NextResponse.json({error: "No file found"}, {status: 400});
         }
-
+        
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 

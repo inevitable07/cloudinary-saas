@@ -6,10 +6,10 @@ import { prisma } from "@/lib/prisma";
 
 
 
-prisma.$connect().catch((error) => {
-    console.error("Prisma connection error:", error);
-    process.exit(1); // Exit the process if the database connection fails
-});
+// prisma.$connect().catch((error) => {
+//     console.error("Prisma connection error:", error);
+//     process.exit(1); 
+// });
 
  // Configuration
     cloudinary.config({ 
@@ -53,14 +53,18 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({error: "No file found"}, {status: 400});
         }
 
+        // Parse the entire video file into a buffer
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
+
+        console.log(`Processing video file: ${file.name}, Size: ${buffer.length} bytes`);
 
         const result = await new Promise<cloudinaryUploadResult>((resolve, reject) => {
             const uploadStream = cloudinary.uploader.upload_stream(
                {
                 resource_type: "video",
                 folder: "nextjs-videos-uploads",
+                timeout: 600000,
                 transformation: [
                     {
                         quality: "auto",
@@ -93,7 +97,5 @@ export async function POST(request: NextRequest) {
         console.log("Video Upload error:", error);
         return NextResponse.json({error: "Upload failed"}, {status: 500});
         
-    }finally{
-            await prisma.$disconnect();
     }
 }
