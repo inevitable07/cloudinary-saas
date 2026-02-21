@@ -14,7 +14,7 @@ function VideoUpload() {
     //handle file size
     const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!videoFile) {
             alert("Please select a video file to upload.");
@@ -28,14 +28,17 @@ function VideoUpload() {
 
         setUploading(true);
         const formData = new FormData();
-        formData.append("video", videoFile);
+        formData.append("file", videoFile);
         formData.append("title", title);
         formData.append("description", description);
         formData.append("originalSize", videoFile.size.toString());
 
         try {
             const response = await axios.post("/api/video-upload", 
-                formData);
+                formData,{
+                  maxBodyLength: Infinity,
+                  maxContentLength: Infinity,
+                });
 
             if(response.status == 200){
 

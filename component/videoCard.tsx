@@ -149,3 +149,5 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
         </div>
       );
 }
+
+export default VideoCard;
