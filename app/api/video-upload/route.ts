@@ -90,6 +90,7 @@ export async function POST(request: NextRequest) {
                 originalSize: originalSize,
                 compressedSize: String(result.bytes),
                 duration: result.duration || 0,
+                userId: userId,
             }
         })
         return NextResponse.json(videoData, {status: 200});
