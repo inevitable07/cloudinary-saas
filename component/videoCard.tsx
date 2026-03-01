@@ -1,6 +1,6 @@
 import React, {useState,useEffect,useCallback} from 'react';
 import { getCldImageUrl, getCldVideoUrl } from 'next-cloudinary';
-import { Download, Clock, FileUp,FileDown } from 'lucide-react';
+import { Download, Clock, FileUp,FileDown, Delete } from 'lucide-react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { filesize } from 'filesize';
@@ -12,9 +12,10 @@ dayjs.extend(relativeTime);
 interface VideoCardProps {
     video: Video;
     onDownload: (url: string, title: string) => void;
+    onDelete: (id: string) => void;
 }
 
-const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
+const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload,onDelete }) => {
 
     const [isHovered, setIsHovered] = useState(false);
     const [previewError, setPreviewError] = useState(false);
@@ -61,7 +62,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
         return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
       }, []);
 
-      const compressionPercentage = Math.round(
+    const compressionPercentage = Math.round(
         (1 - Number(video.compressedSize) / Number(video.originalSize)) * 100
       );
 
@@ -137,13 +138,20 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
                 <span className="text-accent">{compressionPercentage}%</span>
               </div>
               <button
-                className="btn btn-primary btn-sm"
+                className="btn btn-primary btn-sm transition-all duration-200 hover:scale-110 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
                 onClick={() =>
                   onDownload(getFullVideoUrl(video.publicId), video.title)
                 }
               >
                 <Download size={16} />
               </button>
+              <div>
+                <button 
+                className="btn btn-error btn-sm transition-all duration-200 hover:scale-110 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
+                onClick={() => onDelete(video.id)}>
+                <Delete size={16} />
+              </button>
+              </div>
             </div>
           </div>
         </div>

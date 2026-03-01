@@ -1,32 +1,32 @@
 "use client"
-import React,{useState, useEffect, useRef, use} from 'react'
+import React,{useState, useEffect, useRef} from 'react'
 import { CldImage } from 'next-cloudinary';
 
 const socialFormats ={
    "Instagram Square (1:1)": { width: 1080, height: 1080, aspectRatio: "1:1" },
    "Instagram Portrait (4:5)": { width: 1080, height: 1350, aspectRatio: "4:5" },
-   "Instagram Landscape (1.91:1)": { width: 1080, height: 566, aspectRatio: "1.91:1" },
+   "Instagram Landscape (1.91:1)": { width: 1080, height: 566, aspectRatio: "191:100" },
    "Twitter (16:9)": { width: 1200, height: 675, aspectRatio: "16:9" },
-   "Facebook (1.91:1)": { width: 1200, height: 630, aspectRatio: "1.91:1" },
-   "LinkedIn (1.91:1)": { width: 1200, height: 627, aspectRatio: "1.91:1" },
+   "Facebook (1.91:1)": { width: 1200, height: 630, aspectRatio: "191:100" },
+   "LinkedIn (1.91:1)": { width: 1200, height: 627, aspectRatio: "191:100" },
    "Pinterest (2:3)": { width: 1000, height: 1500, aspectRatio: "2:3" },
    "YouTube Thumbnail (16:9)": { width: 1280, height: 720, aspectRatio: "16:9" },
 }
 
 type socialFormatKey = keyof typeof socialFormats;
 
-export default function socialShare() {
+export default function SocialShare() {
 
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [selectedFormat, setSelectedFormat] = useState<socialFormatKey>("Instagram Square (1:1)");
   const [isUploading, setIsUploading] = useState(false);
   const [isTransforming, setIsTransforming] = useState(false);
-  const imageRef = useRef<HTMLImageElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
 
 
 
   useEffect(() => {
-    if(uploadedImage) {
+    if(uploadedImage  && selectedFormat) {
         setIsTransforming(true);
     }
   }, [selectedFormat, uploadedImage])
@@ -58,9 +58,10 @@ export default function socialShare() {
 
   const handleDownload = () =>{
 
-    if(!imageRef.current) return;
+    const img = imageRef.current?.querySelector("img");
+    if(!img) return;
 
-    fetch(imageRef.current.src)
+    fetch(img.src)
     .then(response => response.blob())
     .then(blob => {
       const url = window.URL.createObjectURL(blob);
@@ -71,7 +72,6 @@ export default function socialShare() {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      document.body.removeChild(link);
     })
       
   }
@@ -133,7 +133,8 @@ export default function socialShare() {
 
                 <h3 className="text-lg font-semibold mb-2">Preview</h3>
 
-                <div className="flex justify-center">
+                <div className="flex justify-center"
+                    ref={imageRef}>
 
                   {isTransforming && (
                     <div className="absolute inset-0 flex items-center justify-center bg-base-100 bg-opacity-50 z-10">
@@ -150,7 +151,8 @@ export default function socialShare() {
                     crop="fill"
                     aspectRatio={socialFormats[selectedFormat].aspectRatio}
                     gravity="auto"
-                    ref={imageRef}
+                    quality= "auto"
+                    format= "auto"
                     onLoad={() => setIsTransforming(false)}
                   />
 

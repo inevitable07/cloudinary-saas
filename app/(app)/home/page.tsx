@@ -3,7 +3,9 @@ import React, {useState, useEffect, useCallback} from 'react'
 import axios from 'axios'
 import VideoCard from '@/component/videoCard'
 import { Video } from '@/app/generated/prisma/client'
+import { useRouter } from 'next/navigation'
 function Home() {
+    const router = useRouter();
     const [videos, setVideos] = useState<Video[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -40,13 +42,27 @@ function Home() {
             document.body.removeChild(link);
     }, [])
 
+    const handleDelete = useCallback(async (id: string) => {
+        const res = await fetch(`/api/videos/${id}`, {
+        method: "DELETE",
+        });
+
+       
+        if (!res.ok) {
+            console.error("Failed to delete video");
+        } 
+        setVideos(prev => prev.filter(v => v.id !== id));
+    }, []);
+
     if(loading){
         return <div>Loading...</div>
     }
 
+    
+
     return (
         <div className="container mx-auto p-4"
-            data-theme="cupcake">
+            data-theme="halloween">
           <h1 className="text-2xl font-bold mb-4">Videos</h1>
           {videos.length === 0 ? (
             <div className="text-center text-lg text-gray-500">
@@ -60,6 +76,7 @@ function Home() {
                         key={video.id}
                         video={video}
                         onDownload={handleDownload}
+                        onDelete={handleDelete}
                     />
                 ))
               }

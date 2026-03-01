@@ -33,22 +33,19 @@ function VideoUpload() {
         formData.append("description", description);
         formData.append("originalSize", videoFile.size.toString());
 
-        try {
-            const response = await axios.post("/api/video-upload", 
-                formData,{
-                  maxBodyLength: Infinity,
-                  maxContentLength: Infinity,
-                });
+       try {
+            const response = await axios.post("/api/video-upload", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+                maxBodyLength: Infinity,
+                maxContentLength: Infinity,
+            });
 
-            if(response.status == 200){
-
-            }
             console.log("Upload response:", response.data);
             router.push("/");
+
         } catch (error) {
             console.error("Upload error:", error);
-            //To add notification
-        }finally{
+        } finally {
             setUploading(false);
         }
     }
