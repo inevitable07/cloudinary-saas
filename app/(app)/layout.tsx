@@ -10,8 +10,11 @@ import {
   LayoutDashboardIcon,
   Share2Icon,
   UploadIcon,
-  ImageIcon,
+  HomeIcon,
 } from "lucide-react";
+
+
+
 
 const sidebarItems = [
   { href: "/home", icon: LayoutDashboardIcon, label: "Home Page" },
@@ -61,8 +64,8 @@ export default function AppLayout({
             </div>
             <div className="flex-1">
               <Link href="/" onClick={handleLogoClick}>
-                <div className="btn btn-ghost normal-case text-2xl font-bold tracking-tight cursor-pointer">
-                  Cloudinary Showcase
+                <div className="btn btn-ghost normal-case font-bold font-futuristic text-2xl tracking-tight cursor-pointer  font-orbitron  bg-linear-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+                  ClipScale
                 </div>
               </Link>
             </div>
@@ -80,7 +83,7 @@ export default function AppLayout({
                     </div>
                   </div>
                   <span className="text-sm truncate max-w-xs lg:max-w-md">
-                    {user.username || user.emailAddresses[0].emailAddress}
+                    {user.username || user.fullName || user.emailAddresses[0].emailAddress}
                   </span>
                   <button
                     onClick={handleSignOut}
@@ -104,7 +107,7 @@ export default function AppLayout({
         <label htmlFor="sidebar-drawer" className="drawer-overlay"></label>
         <aside className="bg-base-200 w-64 h-full flex flex-col">
           <div className="flex items-center justify-center py-4">
-            <ImageIcon className="w-10 h-10 text-primary" />
+            <HomeIcon className="w-10 h-10 text-primary" />
           </div>
           <ul className="menu p-4 w-full text-base-content flex-grow">
             {sidebarItems.map((item) => (

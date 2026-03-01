@@ -1,7 +1,14 @@
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export const maxDuration = 300;
+
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from 'cloudinary';
 import {auth} from '@clerk/nextjs/server';
 import { prisma } from "@/lib/prisma";
+
+
 
 
 
@@ -13,9 +20,9 @@ import { prisma } from "@/lib/prisma";
 
  // Configuration
     cloudinary.config({ 
-        cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, 
-        api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY, 
-        api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET // Click 'View API Keys' above to copy your API secret
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+        api_key: process.env.CLOUDINARY_API_KEY, 
+        api_secret: process.env.CLOUDINARY_API_SECRET // Click 'View API Keys' above to copy your API secret
     });
 
     interface cloudinaryUploadResult {
@@ -36,9 +43,9 @@ export async function POST(request: NextRequest) {
 
     try {
         if(
-        !process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ||
-        !process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY ||
-        !process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET
+        !process.env.CLOUDINARY_CLOUD_NAME ||
+        !process.env.CLOUDINARY_API_KEY ||
+        !process.env.CLOUDINARY_API_SECRET
         )
         {
         return NextResponse.json({error: "Cloudinary configuration missing"}, {status: 500});
